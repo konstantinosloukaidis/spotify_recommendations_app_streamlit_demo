@@ -47,9 +47,10 @@ def main():
             selected_song_name = st.selectbox("Select the exact track:", 
                                               matches['track_name'],
                                               format_func=lambda x: f"{x} by {matches[matches['track_name'] == x]['track_artist'].values[0]}")
-            selected_song = filtered_track_data[filtered_track_data['track_name'] == selected_song_name].iloc[0]
+            selected_song = filtered_track_data[filtered_track_data['track_name'] == selected_song_name]
             
             if not selected_song.empty:
+                selected_song = selected_song.iloc[0]
                 target_coords = (selected_song['x'], selected_song['y'])
 
                 filtered_track_data['distance'] = filtered_track_data.apply(lambda row: distance.euclidean(target_coords, (row['x'], row['y'])), axis=1)
@@ -88,7 +89,7 @@ def main():
                     )
                 }
 
-            st.dataframe(recommendations[['track_name', 'track_artist', 'track_genre', 'track_popularity', 'distance', "relevance"]],width='stretch', hide_index=True, column_config=column_config)
+                st.dataframe(recommendations[['track_name', 'track_artist', 'track_genre', 'track_popularity', 'distance', "relevance"]],width='stretch', hide_index=True, column_config=column_config)
 
         else:
             st.warning("No songs found with that name.")
